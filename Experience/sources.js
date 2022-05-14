@@ -1,10 +1,7 @@
 export default [
-    {
-        name: 'cubeColorTexture',
-        type: 'texture',
-        path: 
-        [
-            '../assets/textures/cube-texture.webp'
-        ]
-    }
+  {
+    name: 'gradientTexture',
+    type: 'texture',
+    path: ['../assets/textures/gradients/5.jpg'],
+  },
 ]

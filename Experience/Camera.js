@@ -1,46 +1,58 @@
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import Experience from './Experience.js'
 
-export default class Camera 
-{
-    constructor() 
-    {
-        this.experience = new Experience()
-        this.sizes = this.experience.sizes
-        this.scene = this.experience.scene
-        this.canvas = this.experience.canvas
+export default class Camera {
+  constructor() {
+    this.experience = new Experience()
+    this.sizes = this.experience.sizes
+    this.scene = this.experience.scene
+    this.canvas = this.experience.canvas
+    this.objectDistance = 4
+    this.scrollY = window.scrollY
 
-        this.setInstance()
-        this.setOrbitControls()
-    }
+    this.setListener()
+    this.setGroup()
+    this.setInstance()
+  }
 
-    setInstance()
-    {
-        this.instance = new THREE.PerspectiveCamera(
-            45, 
-            this.sizes.width / this.sizes.height,
-            0.1, 
-            1000
-        ) 
-        this.instance.position.z = 10
-        this.scene.add(this.instance)
-    }
+  setGroup() {
+    this.group = new THREE.Group()
+    this.scene.add(this.group)
+  }
 
-    setOrbitControls()
-    {
-        this.controls = new OrbitControls(this.instance, this.canvas)
-        this.controls.enableDamping = true
-    }
+  setInstance() {
+    this.instance = new THREE.PerspectiveCamera(
+      35,
+      this.sizes.width / this.sizes.height,
+      0.1,
+      1000
+    )
+    this.instance.position.z = 8
+    this.group.add(this.instance)
+  }
 
-    resize()
-    {
-        this.instance.aspect = this.sizes.width / this.sizes.height
-        this.instance.updateProjectionMatrix()
+  setListener() {
+    this.cursor = {
+      x: 0,
+      y: 0,
     }
+    window.addEventListener('mousemove', (event) => {
+      this.cursor.x = event.clientX / this.sizes.width - 0.5
+      this.cursor.y = event.clientY / this.sizes.height - 0.5
+    })
+  }
 
-    update()
-    {
-        this.controls.update()
-    }
-} 
+  resize() {
+    this.instance.aspect = this.sizes.width / this.sizes.height
+    this.instance.updateProjectionMatrix()
+  }
+
+  update() {
+    this.scrollY = window.scrollY
+    this.instance.position.y =
+      (-this.scrollY / this.sizes.height) * this.objectDistance
+
+    this.group.position.x += (this.cursor.x - this.group.position.x) * 0.1
+    this.group.position.y += (-this.cursor.y - this.group.position.y) * 0.1
+  }
+}

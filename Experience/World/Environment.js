@@ -1,26 +1,23 @@
 import * as THREE from 'three'
 import Experience from '../Experience'
 
-export default class Environment 
-{
-    constructor()
-    {
-        this.experience = new Experience()
-        this.scene = this.experience.scene
-        this.resources = this.experience.resources
+export default class Environment {
+  constructor() {
+    this.experience = new Experience()
+    this.scene = this.experience.scene
+    this.resources = this.experience.resources
 
-        this.setAmbientLight()
-        this.setEnvironmentMap()
-    }
+    this.setDirectionalLight()
+    this.setEnvironmentMap()
+  }
 
-    setAmbientLight()
-    {
-        this.ambientLight = new THREE.AmbientLight( 0xffffff, 0.5)
-        this.scene.add(this.ambientLight)
-    }
+  setDirectionalLight() {
+    this.directionalLight = new THREE.DirectionalLight('#ffffff', 0.5)
+    this.directionalLight.position.set(1, 1, 0)
+    this.scene.add(this.directionalLight)
+  }
 
-    setEnvironmentMap()
-    {
-        // EnvironmentMap setup
-    }
+  setEnvironmentMap() {
+    // EnvironmentMap setup
+  }
 }
