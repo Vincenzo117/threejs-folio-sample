@@ -8,8 +8,17 @@ export default class Objects {
     this.scene = this.experience.scene
     this.time = this.experience.time
     this.resources = this.experience.resources
+    this.debug = this.experience.debug
     this.objectDistance = this.experience.camera.objectDistance
     this.scroll = this.experience.scroll
+
+    this.params = {
+      color: 0x00e0ff,
+    }
+
+    if (this.debug.active) {
+      this.debugFolder = this.debug.ui.addFolder('Objects')
+    }
 
     this.setGeometries()
     this.setTexture()
@@ -35,9 +44,18 @@ export default class Objects {
 
   setMaterials() {
     this.material = new THREE.MeshToonMaterial({
-      color: 0xffffff,
+      color: this.params.color,
       gradientMap: this.gradientTexture,
     })
+
+    if (this.debug.active) {
+      this.debugFolder
+        .addColor(this.params, 'color')
+        .name('material color')
+        .onChange(() => {
+          this.material.color.set(this.params.color)
+        })
+    }
   }
 
   setMeshes() {

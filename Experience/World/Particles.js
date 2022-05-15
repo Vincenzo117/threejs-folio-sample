@@ -5,8 +5,17 @@ export default class Particles {
   constructor() {
     this.experience = new Experience()
     this.scene = this.experience.scene
+    this.debug = this.experience.debug
     this.objectDistance = this.experience.camera.objectDistance
     this.objectCout = this.experience.world.objects.meshes.length
+
+    this.params = {
+      color: 0xfb59eb,
+    }
+
+    if (this.debug.active) {
+      this.debugFolder = this.debug.ui.addFolder('Particles')
+    }
 
     this.setGeometry()
     this.setMaterial()
@@ -34,10 +43,19 @@ export default class Particles {
 
   setMaterial() {
     this.material = new THREE.PointsMaterial({
-      color: 0xffffff,
+      color: this.params.color,
       sizeAttenuation: true,
       size: 0.03,
     })
+
+    if (this.debug.active) {
+      this.debugFolder
+        .addColor(this.params, 'color')
+        .name('material color')
+        .onChange(() => {
+          this.material.color.set(this.params.color)
+        })
+    }
   }
 
   setMesh() {
