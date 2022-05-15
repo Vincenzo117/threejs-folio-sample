@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import gsap from 'gsap'
 import Experience from '../Experience'
 
 export default class Objects {
@@ -8,6 +9,7 @@ export default class Objects {
     this.time = this.experience.time
     this.resources = this.experience.resources
     this.objectDistance = this.experience.camera.objectDistance
+    this.scroll = this.experience.scroll
 
     this.setGeometries()
     this.setTexture()
@@ -34,7 +36,7 @@ export default class Objects {
   setMaterials() {
     this.material = new THREE.MeshToonMaterial({
       color: 0xffffff,
-      // gradientMap: this.gradientTexture
+      gradientMap: this.gradientTexture,
     })
   }
 
@@ -43,25 +45,38 @@ export default class Objects {
     this.cone = new THREE.Mesh(this.coneGeometry, this.material)
     this.torusKnot = new THREE.Mesh(this.torusKnotGeometry, this.material)
 
-    this.torus.position.y = 0
-    this.cone.position.y = -this.objectDistance
-    this.torusKnot.position.y = -this.objectDistance * 2
+    this.meshes = [this.torus, this.cone, this.torusKnot]
 
-    this.torus.position.x = 2
-    this.cone.position.x = -2
-    this.torusKnot.position.x = 2
+    this.meshes.forEach((mesh, i) => {
+      if (i % 2 === 0) {
+        mesh.position.x = 2
+      } else {
+        mesh.position.x = -2
+      }
+      mesh.position.y = i * -this.objectDistance
+    })
 
-    this.scene.add(this.torus, this.cone, this.torusKnot)
+    this.scene.add(...this.meshes)
   }
 
   update() {
-    this.torus.rotation.x = this.time.elapsed * 0.00043
-    this.torus.rotation.y = this.time.elapsed * 0.0004
+    this.meshes.forEach((mesh, i) => {
+      mesh.rotation.x += this.time.delta * 0.0002
+      if (i % 2 === 0) {
+        mesh.rotation.y += this.time.delta * 0.00025
+      } else {
+        mesh.rotation.z += this.time.delta * 0.00025
+      }
+    })
+  }
 
-    this.cone.rotation.x = this.time.elapsed * 0.00043
-    this.cone.rotation.z = this.time.elapsed * 0.0004
-
-    this.torusKnot.rotation.x = this.time.elapsed * 0.00043
-    this.torusKnot.rotation.y = this.time.elapsed * 0.0004
+  sectionChange() {
+    gsap.to(this.meshes[this.scroll.currentSection].rotation, {
+      duration: 1.5,
+      ease: 'power2.inOut',
+      x: '+=6',
+      y: '+=3',
+      z: '+=1.5',
+    })
   }
 }

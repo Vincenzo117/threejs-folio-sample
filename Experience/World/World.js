@@ -1,6 +1,7 @@
 import Experience from '../Experience.js'
 import Environment from './Environment.js'
 import Objects from './Objects.js'
+import Particles from './Particles.js'
 
 export default class World {
   constructor() {
@@ -10,6 +11,7 @@ export default class World {
 
     this.resources.on('ready', () => {
       this.objects = new Objects()
+      this.particles = new Particles()
       this.environment = new Environment()
     })
   }
@@ -17,6 +19,12 @@ export default class World {
   update() {
     if (this.objects) {
       this.objects.update()
+    }
+  }
+
+  sectionChange() {
+    if (this.objects) {
+      this.objects.sectionChange()
     }
   }
 }

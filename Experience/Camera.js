@@ -7,6 +7,7 @@ export default class Camera {
     this.sizes = this.experience.sizes
     this.scene = this.experience.scene
     this.canvas = this.experience.canvas
+    this.time = this.experience.time
     this.objectDistance = 4
     this.scrollY = window.scrollY
 
@@ -52,7 +53,9 @@ export default class Camera {
     this.instance.position.y =
       (-this.scrollY / this.sizes.height) * this.objectDistance
 
-    this.group.position.x += (this.cursor.x - this.group.position.x) * 0.1
-    this.group.position.y += (-this.cursor.y - this.group.position.y) * 0.1
+    this.group.position.x +=
+      (this.cursor.x * 0.5 - this.group.position.x) * 0.01 * this.time.delta
+    this.group.position.y +=
+      (-this.cursor.y * 0.5 - this.group.position.y) * 0.01 * this.time.delta
   }
 }

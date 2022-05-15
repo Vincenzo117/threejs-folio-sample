@@ -48,6 +48,11 @@ export default class Experience {
     this.time.on('tick', () => {
       this.update()
     })
+
+    // Section changed event
+    this.scroll.on('sectionChanged', () => {
+      this.sectionChange()
+    })
   }
 
   resize() {
@@ -63,5 +68,9 @@ export default class Experience {
     this.renderer.update()
 
     if (this.stats.active) this.stats.instance.end()
+  }
+
+  sectionChange() {
+    this.world.sectionChange()
   }
 }
